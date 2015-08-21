@@ -8,6 +8,7 @@ export default Ember.Mixin.create({
   disableRoot: false,
 
   ajaxOptions: function(url, type, options) {
+
     var data;
 
     if (options && 'data' in options) { data = options.data; }
@@ -24,17 +25,18 @@ export default Ember.Mixin.create({
   },
 
   _getFormData: function(data) {
-    var formData = new FormData();
-    var root = Object.keys(data)[0];
 
-    Object.keys(data[root]).forEach(function(key) {
-      if (typeof data[root][key] !== 'undefined') {
-        if (this.get('disableRoot') ) {
-          formData.append(key, data[root][key]);
-        } else {
-          formData.append(root + "[" + key + "]", data[root][key]);
-        }
+    var formData = new FormData();
+
+    Object.keys(data).forEach(function(key) {
+      if (data[key] instanceof Blob){
+        var extension = data[key].type.split('/')[1],
+            filename = data[key].filename || 'file.'+extension;
+        formData.append(key, data[key], filename);
+      }else{
+        formData.append(key, data[key]);
       }
+
     }, this);
 
     return formData;
