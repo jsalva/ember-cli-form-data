@@ -31,10 +31,14 @@ export default Ember.Mixin.create({
     Object.keys(data).forEach(function(key) {
       if (data[key] instanceof Blob){
         var extension = data[key].type.split('/')[1],
-            filename = data[key].filename || 'file.'+extension;
+            filename = data[key].filename || '';
         formData.append(key, data[key], filename);
       }else{
-        formData.append(key, data[key]);
+        if (data[key] === true){
+          formData.append(key, 'on');
+        }else{
+          formData.append(key, data[key]);
+        }
       }
 
     }, this);
