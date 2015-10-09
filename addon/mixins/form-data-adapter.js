@@ -37,7 +37,11 @@ export default Ember.Mixin.create({
         if (data[key] === true){
           formData.append(key, 'on');
         }else{
-          formData.append(key, data[key]);
+          if (data[key] === null){
+            return;
+          }else{
+            formData.append(key, data[key]);
+          }
         }
       }
 
